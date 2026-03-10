@@ -1,4 +1,4 @@
-﻿attrs==25.4.0
+attrs==25.4.0
 cdsapi==0.7.7
 certifi==2026.1.4
 charset-normalizer==3.4.4
