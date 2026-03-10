@@ -10,10 +10,7 @@ except ImportError:
     OPENCV_AVAILABLE = False
     st.warning("OpenCV not available. Some features may be limited.")
 
-import customtkinter as ctk
-from tkinter import messagebox, filedialog
 import os
-import threading
 import sys
 import subprocess
 import pandas as pd
