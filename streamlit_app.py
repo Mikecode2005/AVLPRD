@@ -77,7 +77,7 @@ def run_script(script_name, args=None):
         return False, "", str(e)
 
 def update_aggregated_analytics():
-    log_files = ["batch_results_log.xlsx", "live_log.xlsx", "video_results_log.xlsx"]
+    log_files = ["batch_results_log.xlsx", "live_log.xlsx", "video_results_log.xlsx", "live_log.csv"]
     all_data = []
     total_vehicles = 0
     top_state = "No Data"
@@ -85,7 +85,10 @@ def update_aggregated_analytics():
     for file in log_files:
         if os.path.exists(file):
             try:
-                df = pd.read_excel(file)
+                if file.endswith('.csv'):
+                    df = pd.read_csv(file)
+                else:
+                    df = pd.read_excel(file)
                 all_data.append(df)
             except Exception as e:
                 st.warning(f"Error reading {file}: {e}")

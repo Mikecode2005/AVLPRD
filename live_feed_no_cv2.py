@@ -4,9 +4,10 @@ import pandas as pd
 from datetime import datetime
 import os
 import re
+import csv
 
 # --- CONFIGURATION ---
-LOG_FILE = "live_log.xlsx"
+LOG_FILE = "live_log.csv"  # Use CSV instead of Excel to avoid openpyxl dependency
 
 # --- SIMULATED LOGIC (No OpenCV) ---
 def simulate_plate_detection():
@@ -27,10 +28,12 @@ def simulate_plate_detection():
 print("1. Starting Live Monitoring (Simulated Mode)...")
 print("Note: OpenCV not available, running in simulation mode")
 
-# Create log file if it doesn't exist
+# Create log file if it doesn't exist (CSV format)
 headers = ["Time_Stamp", "Model", "Origin_Capital", "Plate_Number", "Confidence"]
 if not os.path.exists(LOG_FILE):
-    pd.DataFrame(columns=headers).to_excel(LOG_FILE, index=False)
+    with open(LOG_FILE, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(headers)
 
 seen_plates = set()
 detection_count = 0
@@ -49,17 +52,16 @@ try:
             seen_plates.add(plate)
             detection_count += 1
             
-            # Log the detection
-            new_log = pd.DataFrame([{
-                "Time_Stamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                "Model": "Simulated Detection",
-                "Origin_Capital": state,
-                "Plate_Number": plate,
-                "Confidence": confidence
-            }])
-            
-            with pd.ExcelWriter(LOG_FILE, mode='a', engine='openpyxl', if_sheet_exists='overlay') as writer:
-                new_log.to_excel(writer, index=False, header=False, startrow=writer.sheets['Sheet1'].max_row)
+            # Log the detection (append to CSV)
+            with open(LOG_FILE, 'a', newline='') as f:
+                writer = csv.writer(f)
+                writer.writerow([
+                    datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    "Simulated Detection",
+                    state,
+                    plate,
+                    confidence
+                ])
             
             print(f"   -> Detected: {plate} ({state}) - Confidence: {confidence}")
             
