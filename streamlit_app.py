@@ -1,7 +1,15 @@
 import streamlit as st
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning, module="torch.utils.data.dataloader")
-import cv2
+
+# Handle OpenCV import gracefully for Streamlit deployment
+try:
+    import cv2
+    OPENCV_AVAILABLE = True
+except ImportError:
+    OPENCV_AVAILABLE = False
+    st.warning("OpenCV not available. Some features may be limited.")
+
 import customtkinter as ctk
 from tkinter import messagebox, filedialog
 import os
