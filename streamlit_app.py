@@ -221,7 +221,15 @@ def main():
         
         if st.button("Start Live Monitoring"):
             with st.spinner("Starting live monitoring..."):
-                success, stdout, stderr = run_script("live_feed.py")
+                # Use fallback script if OpenCV is not available
+                if OPENCV_AVAILABLE:
+                    script_to_run = "live_feed.py"
+                    st.info("Using real OpenCV-based detection")
+                else:
+                    script_to_run = "live_feed_no_cv2.py"
+                    st.info("OpenCV not available, using simulated detection")
+                
+                success, stdout, stderr = run_script(script_to_run)
                 
                 if success:
                     st.success("✅ Live monitoring session completed!")
